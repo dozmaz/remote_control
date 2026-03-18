@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/services.dart';
 
 class NativeBridge {
@@ -44,7 +46,7 @@ class NativeBridge {
       final result = await _channel.invokeMethod('startScreenCapture');
       return result as bool;
     } catch (e) {
-      print('Error al iniciar captura: $e');
+      log('Error al iniciar captura: $e');
       return false;
     }
   }
@@ -163,7 +165,7 @@ class NativeBridge {
       final result = await _channel.invokeMethod('inputText', {'text': text});
       return result == true;
     } catch (e) {
-      print('❌ Error al escribir texto: $e');
+      log('❌ Error al escribir texto: $e');
       return false;
     }
   }

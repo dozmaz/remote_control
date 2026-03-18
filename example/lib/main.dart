@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
   void _appendLog(String s) {
     final now = DateTime.now().toIso8601String();
     setState(() {
-      _platformVersion = '$now - $s\n' + _platformVersion;
+      _platformVersion = '$now - $s\n$_platformVersion';
     });
     // Scroll to top after short delay
     Future.delayed(const Duration(milliseconds: 50), () {

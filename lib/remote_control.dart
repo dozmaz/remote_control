@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:remote_control/native_bridge.dart';
@@ -44,7 +45,7 @@ class RemoteControl {
   void _ensureCommandController() {
     if (_commandController == null || _commandController!.isClosed) {
       _commandController = StreamController<Map<String, dynamic>>.broadcast();
-      print('🔄 StreamController recreado');
+      log('🔄 StreamController recreado');
     }
   }
 
@@ -61,7 +62,7 @@ class RemoteControl {
   }) {
     // Inicializar el StreamController inmediatamente
     _ensureCommandController();
-    print('🎯 RemoteControl inicializado (inactivityDuration=${inactivityDuration.inMinutes}m)');
+    log('🎯 RemoteControl inicializado (inactivityDuration=${inactivityDuration.inMinutes}m)');
   }
 
   bool get isConnected => _isConnected;
@@ -79,7 +80,7 @@ class RemoteControl {
       await _handleInactivityTimeout();
     });
     // Debug
-    //print('⏱️ Inactivity timer started (${inactivityDuration.inSeconds}s)');
+    //log('⏱️ Inactivity timer started (${inactivityDuration.inSeconds}s)');
   }
 
   void _cancelInactivityTimer() {
@@ -88,7 +89,7 @@ class RemoteControl {
   }
 
   Future<void> _handleInactivityTimeout() async {
-    print('⏳ Inactividad detectada (${inactivityDuration.inMinutes}m). Cerrando conexión...');
+    log('⏳ Inactividad detectada (${inactivityDuration.inMinutes}m). Cerrando conexión...');
 
     // Notificar a la app principal
     try {
@@ -98,23 +99,23 @@ class RemoteControl {
         'lastActivity': _lastActivity?.toIso8601String(),
       });
     } catch (e) {
-      print('⚠️ Error notificando inactivity a app: $e');
+      log('⚠️ Error notificando inactivity a app: $e');
     }
 
     // Intentar limpiar recursos WebRTC
     try {
       await stopScreenCapture();
     } catch (e) {
-      print('⚠️ Error al detener screen capture en inactivity: $e');
+      log('⚠️ Error al detener screen capture en inactivity: $e');
     }
 
     // Cerrar WebSocket
     try {
       _channel?.sink.close();
       _isConnected = false;
-      print('✅ WebSocket cerrado por inactividad');
+      log('✅ WebSocket cerrado por inactividad');
     } catch (e) {
-      print('⚠️ Error cerrando websocket por inactividad: $e');
+      log('⚠️ Error cerrando websocket por inactividad: $e');
     }
 
     // Cancelar timer (por si acaso)
@@ -125,7 +126,7 @@ class RemoteControl {
   Future<void> connect() async {
     // Si fue disposed, resetear automáticamente para permitir primera conexión
     if (_isDisposed) {
-      print('🔄 Reseteando estado disposed para conexión');
+      log('🔄 Reseteando estado disposed para conexión');
       _isDisposed = false;
     }
 
@@ -136,7 +137,7 @@ class RemoteControl {
       final wsUrl = serverUrl.replaceFirst('http', 'ws');
       final uri = Uri.parse('$wsUrl/remote/$deviceMac?token=$token&type=device');
 
-      print('🔌 Intentando conectar a: $uri');
+      log('🔌 Intentando conectar a: $uri');
       _channel = WebSocketChannel.connect(uri);
 
       _channel!.stream.listen(
@@ -148,23 +149,23 @@ class RemoteControl {
         },
         onDone: () {
           _isConnected = false;
-          print('❌ WebSocket desconectado');
+          log('❌ WebSocket desconectado');
         },
         onError: (error) {
           _isConnected = false;
-          print('❌ Error WebSocket: $error');
+          log('❌ Error WebSocket: $error');
         },
       );
 
       // Esperar un momento para verificar la conexión
       await Future.delayed(const Duration(milliseconds: 500));
       _isConnected = true;
-      print('✅ WebSocket conectado exitosamente');
+      log('✅ WebSocket conectado exitosamente');
 
       // Iniciar timer de inactividad al conectar
       _markActivity();
     } catch (e) {
-      print('❌ Error al conectar WebSocket: $e');
+      log('❌ Error al conectar WebSocket: $e');
       _isConnected = false;
       rethrow;
     }
@@ -172,7 +173,7 @@ class RemoteControl {
 
   // Manejar mensajes del servidor
   void _handleMessage(Map<String, dynamic> message) async {
-    print('📨 Mensaje recibido: ${message['type']}');
+    log('📨 Mensaje recibido: ${message['type']}');
 
     _markActivity();
 
@@ -188,7 +189,7 @@ class RemoteControl {
         await _addIceCandidate(message['candidate']);
         break;
       default:
-        print('⚠️  Tipo de mensaje no manejado: ${message['type']}');
+        log('⚠️  Tipo de mensaje no manejado: ${message['type']}');
     }
   }
 
@@ -204,7 +205,7 @@ class RemoteControl {
         // Solicitar permiso de MediaProjection si no está activo
         final granted = await NativeBridge.requestMediaProjection();
         if (!granted) {
-          print('❌ Permiso de captura de pantalla denegado');
+          log('❌ Permiso de captura de pantalla denegado');
           return;
         }
 
@@ -215,11 +216,11 @@ class RemoteControl {
       // Iniciar servicio foreground
       final started = await NativeBridge.startScreenCapture();
       if (!started) {
-        print('❌ No se pudo iniciar el servicio de captura');
+        log('❌ No se pudo iniciar el servicio de captura');
         return;
       }
 
-      print('✅ Servicio de captura iniciado');
+      log('✅ Servicio de captura iniciado');
 
       // 1. Crear PeerConnection PRIMERO con TURN server propio
       if (_peerConnection == null) {
@@ -260,7 +261,7 @@ class RemoteControl {
         // Configurar handlers de ICE candidates
         _peerConnection!.onIceCandidate = (candidate) {
           if (candidate.candidate == null || candidate.candidate!.isEmpty) {
-            print('🧊 ICE: Candidato vacío (fin de gathering)');
+            log('🧊 ICE: Candidato vacío (fin de gathering)');
             return;
           }
 
@@ -290,40 +291,40 @@ class RemoteControl {
           }
 
           // Log completo para debugging
-          final display = candStr.length > 80 ? candStr.substring(0, 80) + '...' : candStr;
+          final display = candStr.length > 80 ? '${candStr.substring(0, 80)}...' : candStr;
 
-          print('$icon ICE [$type]: $display');
+          log('$icon ICE [$type]: $display');
 
           _sendMessage({'type': 'ice-candidate', 'candidate': candidate.toMap()});
         };
 
         // Configurar handler de estado de conexión
         _peerConnection!.onConnectionState = (state) {
-          print('🔗 Estado de conexión WebRTC: $state');
+          log('🔗 Estado de conexión WebRTC: $state');
           if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed) {
-            print('❌ Conexión WebRTC falló - intentando limpiar recursos');
+            log('❌ Conexión WebRTC falló - intentando limpiar recursos');
             _handleConnectionFailure();
           } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
-            print('✅ Conexión WebRTC establecida exitosamente');
+            log('✅ Conexión WebRTC establecida exitosamente');
             _markActivity();
           }
         };
 
         // Handler de estado de ICE
         _peerConnection!.onIceConnectionState = (state) {
-          print('🧊 Estado ICE: $state');
+          log('🧊 Estado ICE: $state');
           if (state == RTCIceConnectionState.RTCIceConnectionStateFailed || state == RTCIceConnectionState.RTCIceConnectionStateDisconnected) {
-            print('⚠️ ICE connection issue: $state');
+            log('⚠️ ICE connection issue: $state');
           }
         };
 
         // Handler de recolección de ICE
         _peerConnection!.onIceGatheringState = (state) {
-          print('🧊 Estado de recolección ICE: $state');
+          log('🧊 Estado de recolección ICE: $state');
           _markActivity();
         };
 
-        print('✅ PeerConnection creado con configuración mejorada');
+        log('✅ PeerConnection creado con configuración mejorada');
       }
 
       // 2. Capturar pantalla para WebRTC
@@ -332,21 +333,21 @@ class RemoteControl {
         'audio': false,
       });
 
-      print('✅ Stream de pantalla capturado');
+      log('✅ Stream de pantalla capturado');
 
       // 3. Agregar stream local al PeerConnection
       _localStream!.getTracks().forEach((track) {
-        print('➕ Agregando track: ${track.kind} - ${track.id}');
+        log('➕ Agregando track: ${track.kind} - ${track.id}');
         _peerConnection!.addTrack(track, _localStream!);
       });
 
-      print('✅ Tracks agregados al PeerConnection');
+      log('✅ Tracks agregados al PeerConnection');
 
       // 4. Crear oferta DESPUÉS de agregar tracks
       RTCSessionDescription offer = await _peerConnection!.createOffer({'offerToReceiveAudio': false, 'offerToReceiveVideo': true});
       await _peerConnection!.setLocalDescription(offer);
 
-      print('✅ Oferta WebRTC creada');
+      log('✅ Oferta WebRTC creada');
 
       // 5. Enviar oferta al servidor
       _sendMessage({'type': 'webrtc-offer', 'sdp': offer.toMap()});
@@ -354,19 +355,19 @@ class RemoteControl {
       // Marcar actividad tras generar y enviar oferta
       _markActivity();
 
-      print('✅ Oferta enviada al servidor');
-      print('✅ Screen capture y WebRTC iniciados completamente');
+      log('✅ Oferta enviada al servidor');
+      log('✅ Screen capture y WebRTC iniciados completamente');
 
       // 6. Timeout de conexión - si no se conecta en 60 segundos, limpiar
       Future.delayed(const Duration(seconds: 60), () {
         if (_peerConnection != null && _peerConnection!.connectionState != RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
-          print('⏱️ Timeout de conexión WebRTC - limpiando recursos');
-          print(jsonEncode(_peerConnection!.connectionState));
+          log('⏱️ Timeout de conexión WebRTC - limpiando recursos');
+          log(jsonEncode(_peerConnection!.connectionState));
           _handleConnectionFailure();
         }
       });
     } catch (e) {
-      print('❌ Error al iniciar screen capture: $e');
+      log('❌ Error al iniciar screen capture: $e');
       // Limpiar en caso de error
       await stopScreenCapture();
     }
@@ -374,18 +375,18 @@ class RemoteControl {
 
   // Manejar fallo de conexión WebRTC
   void _handleConnectionFailure() async {
-    print('🔄 Manejando fallo de conexión WebRTC');
+    log('🔄 Manejando fallo de conexión WebRTC');
     try {
       await stopScreenCapture();
     } catch (e) {
-      print('❌ Error al limpiar después de fallo: $e');
+      log('❌ Error al limpiar después de fallo: $e');
     }
   }
 
   // Manejar comandos de control
   Future<void> _handleCommand(Map<String, dynamic> command) async {
     final action = command['action'];
-    print('Ejecutando comando: $action');
+    log('Ejecutando comando: $action');
 
     // Marcar actividad al recibir un comando
     _markActivity();
@@ -452,7 +453,7 @@ class RemoteControl {
   // Enviar comando a la app principal de forma segura
   void _sendCommandToApp(String cmd, dynamic params) {
     if (_isDisposed) {
-      print('⚠️ No se puede enviar comando: instancia disposed');
+      log('⚠️ No se puede enviar comando: instancia disposed');
       return;
     }
 
@@ -463,9 +464,9 @@ class RemoteControl {
         'cmd': cmd,
         'params': params,
       });
-      print('✅ Comando enviado a la app: $cmd');
+      log('✅ Comando enviado a la app: $cmd');
     } else {
-      print('❌ No se pudo enviar comando, controller no disponible');
+      log('❌ No se pudo enviar comando, controller no disponible');
     }
   }
 
@@ -478,19 +479,19 @@ class RemoteControl {
 
   Future<void> stopScreenCapture() async {
     try {
-      print('🛑 Iniciando detención de screen capture...');
+      log('🛑 Iniciando detención de screen capture...');
 
       // 1. Detener tracks del stream PRIMERO
       if (_localStream != null) {
-        print('🛑 Deteniendo ${_localStream!.getTracks().length} tracks...');
+        log('🛑 Deteniendo ${_localStream!.getTracks().length} tracks...');
         final tracks = _localStream!.getTracks();
         for (var track in tracks) {
           try {
-            print('🛑 Deteniendo track: ${track.kind} - ${track.id}');
+            log('🛑 Deteniendo track: ${track.kind} - ${track.id}');
             track.stop();
-            print('✅ Track detenido: ${track.kind}');
+            log('✅ Track detenido: ${track.kind}');
           } catch (e) {
-            print('⚠️ Error deteniendo track: $e');
+            log('⚠️ Error deteniendo track: $e');
           }
         }
 
@@ -500,12 +501,12 @@ class RemoteControl {
 
       // 2. Cerrar PeerConnection
       if (_peerConnection != null) {
-        print('🛑 Cerrando PeerConnection (estado: ${_peerConnection!.connectionState})');
+        log('🛑 Cerrando PeerConnection (estado: ${_peerConnection!.connectionState})');
         try {
           await _peerConnection!.close();
-          print('✅ PeerConnection cerrado');
+          log('✅ PeerConnection cerrado');
         } catch (e) {
-          print('⚠️ Error cerrando PeerConnection: $e');
+          log('⚠️ Error cerrando PeerConnection: $e');
         }
         _peerConnection = null;
       }
@@ -516,40 +517,40 @@ class RemoteControl {
       // 4. Dispose del stream (esto debe liberar el Surface)
       if (_localStream != null) {
         try {
-          print('🛑 Disposing stream...');
+          log('🛑 Disposing stream...');
           _localStream!.dispose();
-          print('✅ Stream disposed');
+          log('✅ Stream disposed');
         } catch (e) {
-          print('⚠️ Error en dispose: $e');
+          log('⚠️ Error en dispose: $e');
         }
         _localStream = null;
       }
 
       // 5. Esperar significativamente para asegurar que Flutter liberó el Surface
-      print('⏳ Esperando liberación completa del Surface...');
+      log('⏳ Esperando liberación completa del Surface...');
       await Future.delayed(const Duration(milliseconds: 1000));
 
       // 6. Liberar MediaProjection nativo
-      print('🛑 Liberando MediaProjection nativo...');
+      log('🛑 Liberando MediaProjection nativo...');
       await NativeBridge.releaseMediaProjection();
-      print('✅ MediaProjection liberado');
+      log('✅ MediaProjection liberado');
 
       // 7. Esperar antes de detener servicio
       await Future.delayed(const Duration(milliseconds: 500));
 
       // 8. Finalmente detener servicio nativo
-      print('🛑 Deteniendo servicio...');
+      log('🛑 Deteniendo servicio...');
       final stopped = await NativeBridge.stopScreenCapture();
       if (stopped) {
-        print('✅ Servicio nativo detenido');
+        log('✅ Servicio nativo detenido');
       }
 
       // Cancelar timer de inactividad al detener capture
       _cancelInactivityTimer();
 
-      print('✅ Screen capture detenido completamente');
+      log('✅ Screen capture detenido completamente');
     } catch (e) {
-      print('❌ Error al detener screen capture: $e');
+      log('❌ Error al detener screen capture: $e');
       // Intentar limpiar de todos modos con delays largos
       _localStream = null;
       _peerConnection = null;
@@ -559,7 +560,7 @@ class RemoteControl {
         await Future.delayed(const Duration(milliseconds: 500));
         await NativeBridge.stopScreenCapture();
       } catch (e2) {
-        print('❌ Error al detener servicio nativo: $e2');
+        log('❌ Error al detener servicio nativo: $e2');
       }
     }
   }
@@ -567,53 +568,53 @@ class RemoteControl {
   // Dispose completo con lifecycle robusto
   Future<void> dispose() async {
     if (_isDisposed) {
-      print('⚠️ Ya se llamó dispose anteriormente');
+      log('⚠️ Ya se llamó dispose anteriormente');
       return;
     }
 
-    print('🗑️ Iniciando dispose de RemoteControl...');
+    log('🗑️ Iniciando dispose de RemoteControl...');
     _isDisposed = true;
 
     // 1. Cerrar WebSocket
     try {
       _channel?.sink.close();
       _isConnected = false;
-      print('✅ WebSocket cerrado');
+      log('✅ WebSocket cerrado');
     } catch (e) {
-      print('⚠️ Error cerrando WebSocket: $e');
+      log('⚠️ Error cerrando WebSocket: $e');
     }
 
     // 2. Cerrar StreamController de forma segura
     try {
       if (_commandController != null && !_commandController!.isClosed) {
         await _commandController!.close();
-        print('✅ StreamController cerrado');
+        log('✅ StreamController cerrado');
       }
     } catch (e) {
-      print('⚠️ Error cerrando StreamController: $e');
+      log('⚠️ Error cerrando StreamController: $e');
     }
 
     // 3. Detener captura de pantalla
     try {
       await stopScreenCapture();
-      print('✅ Screen capture detenido');
+      log('✅ Screen capture detenido');
     } catch (e) {
-      print('⚠️ Error deteniendo screen capture: $e');
+      log('⚠️ Error deteniendo screen capture: $e');
     }
 
     // Cancelar timer de inactividad
     _cancelInactivityTimer();
 
-    print('✅ Dispose completado');
+    log('✅ Dispose completado');
   }
 
   // Reconectar: útil para reiniciar después de errores o dispose
   Future<void> reconnect() async {
-    print('🔄 Reconectando...');
+    log('🔄 Reconectando...');
 
     // Si fue disposed, resetear el flag para permitir reconexión
     if (_isDisposed) {
-      print('🔄 Reseteando estado disposed para reconexión');
+      log('🔄 Reseteando estado disposed para reconexión');
       _isDisposed = false;
     }
 
@@ -622,7 +623,7 @@ class RemoteControl {
       _channel?.sink.close();
       _isConnected = false;
     } catch (e) {
-      print('⚠️ Error cerrando conexión anterior: $e');
+      log('⚠️ Error cerrando conexión anterior: $e');
     }
 
     // Recrear el command controller
@@ -636,7 +637,7 @@ class RemoteControl {
     // Manejar respuesta WebRTC del cliente web (el dispositivo envió la oferta)
     try {
       if (_peerConnection == null) {
-        print('❌ PeerConnection no inicializado');
+        log('❌ PeerConnection no inicializado');
         return;
       }
 
@@ -645,9 +646,9 @@ class RemoteControl {
 
       final description = RTCSessionDescription(sdp['sdp'], sdp['type']);
       await _peerConnection!.setRemoteDescription(description);
-      print('✅ Respuesta WebRTC recibida y aplicada');
+      log('✅ Respuesta WebRTC recibida y aplicada');
     } catch (e) {
-      print('❌ Error al manejar respuesta WebRTC: $e');
+      log('❌ Error al manejar respuesta WebRTC: $e');
     }
   }
 
@@ -657,7 +658,7 @@ class RemoteControl {
       _markActivity();
       await _peerConnection?.addCandidate(RTCIceCandidate(candidate['candidate'], candidate['sdpMid'], candidate['sdpMLineIndex']));
     } catch (e) {
-      print('Error al agregar ICE candidate: $e');
+      log('Error al agregar ICE candidate: $e');
     }
   }
 }

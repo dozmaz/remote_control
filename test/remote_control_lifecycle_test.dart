@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:remote_control/remote_control.dart';
 
@@ -65,7 +67,7 @@ void main() {
       // Debe poder escuchar el stream antes de conectar
       expect(() {
         remoteControl.onCustomCommand.listen((command) {
-          print('Comando: ${command['cmd']}');
+          log('Comando: ${command['cmd']}');
         });
       }, returnsNormally);
     });

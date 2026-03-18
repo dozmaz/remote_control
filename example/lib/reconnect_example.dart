@@ -8,7 +8,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 }
 
 class RemoteControlPage extends StatefulWidget {
-  const RemoteControlPage({Key? key}) : super(key: key);
+  const RemoteControlPage({super.key});
 
   @override
   State<RemoteControlPage> createState() => _RemoteControlPageState();

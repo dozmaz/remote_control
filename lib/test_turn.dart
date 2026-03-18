@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 Future<void> testTurnConnectivity(String hostIp, int port) async {
@@ -9,9 +10,9 @@ Future<void> testTurnConnectivity(String hostIp, int port) async {
     );
     await socket.close();
 } on SocketException catch (e) {
-    print('❌ Error de socket: ${e.message}');
-    print('   Código: ${e.osError?.errorCode}');
+    log('❌ Error de socket: ${e.message}');
+    log('   Código: ${e.osError?.errorCode}');
   } catch (e) {
-    print('❌ Error inesperado: $e');
+    log('❌ Error inesperado: $e');
   }
 }
