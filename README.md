@@ -398,9 +398,9 @@ See [PERMISSIONS.md](./PERMISSIONS.md) for detailed security guidance.
 
 ## 📞 Support
 
-- 📧 Issues: [GitHub Issues](https://github.com/yourusername/remote_control/issues)
+- 📧 Issues: [GitHub Issues](https://github.com/dozmaz/remote_control/issues)
 - 📖 Documentation: See the docs folder
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/remote_control/discussions)
+- 💬 Discussions: [GitHub Discussions](https://github.com/dozmaz/remote_control/discussions)
 
 ## 🙏 Credits
 

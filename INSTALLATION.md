@@ -407,7 +407,7 @@ If you encounter issues:
 
 1. Check this installation guide thoroughly
 2. Review [Troubleshooting section in README](./README.md#troubleshooting)
-3. Search [GitHub Issues](https://github.com/yourusername/remote_control/issues)
+3. Search [GitHub Issues](https://github.com/dozmaz/remote_control/issues)
 4. Open a new issue with:
    - Flutter version (`flutter --version`)
    - Error logs
