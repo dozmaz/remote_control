@@ -30,7 +30,7 @@ dependencies:
 ### Basic Usage
 
 ```dart
-import 'package:remote_control/remote_control.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
 
 // 1. Create instance
 final remoteControl = RemoteControl(
@@ -204,7 +204,7 @@ Users must manually enable the accessibility service:
 You can request this programmatically:
 
 ```dart
-import 'package:remote_control/native_bridge.dart';
+import 'package:remote_control_webrtc/native_bridge.dart';
 
 // Check if enabled
 bool enabled = await NativeBridge.isAccessibilityEnabled();

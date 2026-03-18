@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remote_control/remote_control_method_channel.dart';
+import 'package:remote_control_webrtc/remote_control_method_channel.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

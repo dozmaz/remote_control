@@ -184,8 +184,8 @@ In your Flutter app:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:remote_control/remote_control.dart';
-import 'package:remote_control/native_bridge.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
+import 'package:remote_control_webrtc/native_bridge.dart';
 
 void main() {
   runApp(MyApp());

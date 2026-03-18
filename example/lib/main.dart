@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:remote_control/remote_control.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
 
 void main() {
   runApp(const MyApp());

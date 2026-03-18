@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  remote_control:
+  remote_control_webrtc:
     # When depending on this package from a real application you should use:
     #   remote_control: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints

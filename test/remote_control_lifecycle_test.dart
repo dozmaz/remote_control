@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:remote_control/remote_control.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
 
 /// Test para verificar que el patrón de lifecycle funciona correctamente
 void main() {

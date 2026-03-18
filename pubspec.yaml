@@ -1,4 +1,4 @@
-name: remote_control
+name: remote_control_webrtc
 description: "Flutter plugin for Android remote control with screen capture via WebRTC, accessibility services for touch/swipe/input, and bidirectional WebSocket communication."
 version: 0.0.1
 homepage: https://github.com/dozmaz/remote_control

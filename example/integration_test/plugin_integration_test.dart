@@ -10,7 +10,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:remote_control/remote_control.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

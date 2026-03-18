@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:remote_control/remote_control.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
 
 /// Ejemplo de uso del plugin RemoteControl con reconexión robusta
 void main() {

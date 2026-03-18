@@ -15,7 +15,7 @@ dependencies:
 ### 1. Importar el Plugin
 
 ```dart
-import 'package:remote_control/remote_control.dart';
+import 'package:remote_control_webrtc/remote_control.dart';
 ```
 
 ### 2. Crear una Instancia

@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:remote_control/native_bridge.dart';
-import 'package:remote_control/test_turn.dart';
+import 'package:remote_control_webrtc/native_bridge.dart';
+import 'package:remote_control_webrtc/test_turn.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'remote_control_platform_interface.dart';
