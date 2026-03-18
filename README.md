@@ -72,46 +72,108 @@ Add the following to your **app's** `android/app/src/main/AndroidManifest.xml`:
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yourcompany.yourapp">
 
-    <!-- Required permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    
-    <!-- Optional: for advanced features -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+   <!-- Permisos añadidos por el ejemplo para usar WebSocket, servicios en primer plano y captura de pantalla -->
+   <uses-permission android:name="android.permission.INTERNET" />
+   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+   <uses-permission android:name="android.permission.WAKE_LOCK" />
+   <!-- Opcional: si se transmite audio -->
+   <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <application>
-        <!-- Accessibility Service (for remote control) -->
-        <service
-            android:name="bo.webrtc.remote_control.RemoteControlAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/remote_control_accessibility_service" />
-        </service>
+   <application
+           android:label="remote_control_example"
+           android:name="${applicationName}"
+           android:icon="@mipmap/ic_launcher"
+           android:hardwareAccelerated="true"
+           android:usesCleartextTraffic="true"
+           android:networkSecurityConfig="@xml/network_security_config"
+           android:largeHeap="true">
+      <receiver
+              android:name="bo.webrtc.remote_control.MyDeviceAdminReceiver"
+              android:permission="android.permission.BIND_DEVICE_ADMIN"
+              android:exported="true">
+         <meta-data
+                 android:name="android.app.device_admin"
+                 android:resource="@xml/device_admin" />
+         <intent-filter>
+            <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            <action android:name="android.app.action.PROFILE_PROVISIONING_COMPLETE" />
+         </intent-filter>
+      </receiver>
 
-        <!-- Device Admin Receiver (optional: for lock/wipe features) -->
-        <receiver
-            android:name="bo.webrtc.remote_control.MyDeviceAdminReceiver"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin_receiver" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
+      <!-- Accessibility Service para simular toques -->
+      <service
+              android:name="bo.webrtc.remote_control.RemoteControlAccessibilityService"
+              android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+              android:exported="true">
+         <intent-filter>
+            <action android:name="android.accessibilityservice.AccessibilityService" />
+         </intent-filter>
+         <meta-data
+                 android:name="android.accessibilityservice"
+                 android:resource="@xml/accessibility_service_config" />
+      </service>
+
+      <!-- Declaración explícita del servicio de captura del plugin remote_control -->
+      <!-- Esto es necesario si el plugin crea su propio Service en otro paquete
+           (por ejemplo bo.webrtc.remote_control.ScreenCaptureService). Android 14
+           exige que el Service que usa MediaProjection declare foregroundServiceType="mediaProjection". -->
+      <service
+              android:name="bo.webrtc.remote_control.ScreenCaptureService"
+              android:foregroundServiceType="mediaProjection"
+              android:exported="false" />
     </application>
 </manifest>
 ```
+
+Add main/res/xml/accessibility_service_config.xml: 
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+                       android:accessibilityEventTypes="typeAllMask"
+                       android:accessibilityFeedbackType="feedbackGeneric"
+                       android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows|flagReportViewIds|flagRequestTouchExplorationMode"
+                       android:canPerformGestures="true"
+                       android:canRetrieveWindowContent="true"
+                       android:description="@string/accessibility_service_description"
+                       android:notificationTimeout="100"/>
+
+```
+
+Add main/res/xml/device_admin.xml
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+   <uses-policies>
+      <limit-password />
+      <watch-login />
+      <reset-password />
+      <force-lock />
+      <wipe-data />
+      <set-global-proxy />
+      <disable-camera />
+      <disable-keyguard-features />
+   </uses-policies>
+</device-admin>
+```
+
+Add main/res/xml/network_security_config.xml
+
+Cambiar 192.168.100.225 por el IP de tu servidor de señalización o TURN, o usar dominios públicos si es necesario. Esto permite tráfico HTTP sin cifrar (cleartext) para esos hosts específicos, lo cual es útil para desarrollo local. En producción, se recomienda usar WSS/HTTPS y eliminar esta configuración.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+   <base-config cleartextTrafficPermitted="true" />
+   <domain-config cleartextTrafficPermitted="true">
+      <domain includeSubdomains="true">192.168.100.225</domain>
+      <domain includeSubdomains="true">stun.l.google.com</domain>
+      <domain includeSubdomains="true">stun1.l.google.com</domain>
+   </domain-config>
+</network-security-config>
+```
+
 
 ### 2. Permission Explanations
 

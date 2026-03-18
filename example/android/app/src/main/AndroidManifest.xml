@@ -14,7 +14,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:largeHeap="true">
         <receiver
-                android:name=".MyDeviceAdminReceiver"
+                android:name="bo.webrtc.remote_control.MyDeviceAdminReceiver"
                 android:permission="android.permission.BIND_DEVICE_ADMIN"
                 android:exported="true">
             <meta-data
