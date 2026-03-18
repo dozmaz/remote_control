@@ -24,7 +24,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remote_control: ^0.0.1
+  remote_control_webrtc: ^1.0.0
 ```
 
 ### Basic Usage

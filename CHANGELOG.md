@@ -80,6 +80,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.0] - 2026-03-18
+
+### 🎉 Stable Release
+
+#### Added
+- Publicación inicial estable del plugin renombrado a `remote_control_webrtc`.
+- Documentación del puente nativo (`NATIVE_BRIDGE.md`).
+
+#### Notes
+- Esta versión marca el estado inicial estable y breaking API considerada lista para uso; sigue manteniendo compatibilidad en Android.
+
+
 ## Version History
 
 - **0.0.1** (2026-02-09): Initial release

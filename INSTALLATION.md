@@ -19,7 +19,7 @@ Add `remote_control` to your `pubspec.yaml`:
 dependencies:
   flutter:
     sdk: flutter
-  remote_control: ^0.0.1
+  remote_control_webrtc: ^1.0.0
 ```
 
 Then run:

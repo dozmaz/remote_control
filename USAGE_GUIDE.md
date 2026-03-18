@@ -6,7 +6,7 @@ Agrega el plugin a tu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  remote_control:
+  remote_control_webrtc:
     path: ../remote_control  # O la ruta correspondiente
 ```
 
