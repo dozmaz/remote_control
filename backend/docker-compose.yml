@@ -1,0 +1,31 @@
+services:
+  coturn:
+    image: coturn/coturn:latest
+    container_name: coturn-server
+    restart: unless-stopped
+    mem_limit: 512m
+    mem_reservation: 256m
+    ports:
+      - "3478:3478/udp"
+      - "3478:3478/tcp"
+      - "5349:5349/tcp"
+      - "5766:5766/tcp"
+      - "49152-49200:49152-49200/udp"
+    command:
+      - -n
+      - --listening-ip=0.0.0.0
+      - --listening-port=3478
+      - --min-port=49152
+      - --max-port=49200
+      - --fingerprint
+      - --lt-cred-mech
+      - --user=remotecontrol:r3m0t3-c0ntr0l+123
+      - --realm=remotecontrol
+      - --log-file=stdout
+      - --external-ip=192.168.100.212
+    networks:
+      - coturn_net
+
+networks:
+  coturn_net:
+    driver: bridge

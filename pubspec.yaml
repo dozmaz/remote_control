@@ -1,0 +1,41 @@
+name: remote_control
+description: "Flutter plugin for Android remote control with screen capture via WebRTC, accessibility services for touch/swipe/input, and bidirectional WebSocket communication."
+version: 0.0.1
+homepage: https://github.com/yourusername/remote_control
+repository: https://github.com/yourusername/remote_control
+issue_tracker: https://github.com/yourusername/remote_control/issues
+documentation: https://github.com/yourusername/remote_control/wiki
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.7.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.8
+  flutter_webrtc: ^1.4.0
+  web_socket_channel: ^3.0.3
+  permission_handler: ^12.0.1
+  http: ^1.6.0
+  device_info_plus: ^12.3.0
+  android_intent_plus: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: bo.webrtc.remote_control
+        pluginClass: RemoteControlPlugin
+
+topics:
+  - remote-control
+  - webrtc
+  - screen-capture
+  - accessibility
+  - android

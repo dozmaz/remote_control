@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="bo.webrtc.remote_control">
+    <!-- Minimum required permission for the plugin -->
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>

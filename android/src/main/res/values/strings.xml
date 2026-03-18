@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="remote_control_accessibility_description">
+        Allows remote users to control this device by simulating touch, swipe, and text input actions.
+        This service enables screen interaction for remote control functionality.
+        Enable only if you trust the remote user.
+    </string>
+</resources>
+
