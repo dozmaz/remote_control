@@ -219,6 +219,7 @@ if (!enabled) {
 
 - **[Permissions Guide](./PERMISSIONS.md)** - Security and permission details
 - **[Usage Guide](./USAGE_GUIDE.md)** - Detailed examples and use cases
+- **[Native Bridge (Android)](./NATIVE_BRIDGE.md)** - Documentación del puente nativo (`lib/native_bridge.dart`)
 - **[Lifecycle Pattern](./LIFECYCLE_PATTERN.md)** - State management documentation
 - **[Backend Setup](./backend/README.md)** - Signaling server setup
 - **[Changelog](./CHANGELOG.md)** - Version history

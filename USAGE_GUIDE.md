@@ -10,6 +10,10 @@ dependencies:
     path: ../remote_control  # O la ruta correspondiente
 ```
 
+Consulta también la documentación del puente nativo para integraciones avanzadas:
+
+- [Native Bridge (Android)](../NATIVE_BRIDGE.md)
+
 ## 🚀 Inicio Rápido
 
 ### 1. Importar el Plugin
