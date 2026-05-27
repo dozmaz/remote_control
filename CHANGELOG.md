@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-05-27
+
+### 🐛 Bug Fixes
+
+#### Android
+- Fixed build errors with `Nullability and flow analysis for Kotlin` (ConstraintSystem.proposalDue)
+- Resolved Kotlin compilation errors in `RemoteControlPlugin.kt`
+- Fixed `android/build.gradle` plugin configuration issues
+- Updated `plugin_platform_interface` to `^2.1.8` for Kotlin compatibility
+- Fixed `flutter_webrtc` version to `^1.4.1` for Kotlin compatibility
+
+### 🛠️ Build System
+
+#### Android
+-Migrated to modern Android Gradle Plugin configuration
+- Cleaned up deprecated `buildscript` and `allprojects` blocks
+- Added `compileSdk = 36` for compatibility with latest Gradle versions
+- Configured `kotlinOptions.jvmTarget = "17"` for Kotlin 2.2.20
+
 ## [0.0.1] - 2026-03-18
 
 ### 🎉 Initial Release
