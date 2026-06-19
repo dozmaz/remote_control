@@ -2,8 +2,8 @@
 
 A Flutter plugin for Android remote control with screen capture, accessibility services, and bidirectional communication via WebRTC and WebSocket.
 
-[![pub package](https://img.shields.io/pub/v/remote_control.svg)](https://pub.dev/packages/remote_control)
-[![Platform](https://img.shields.io/badge/platform-android-blue.svg)](https://pub.dev/packages/remote_control)
+[![pub package](https://img.shields.io/pub/v/remote_control_webrtc.svg)](https://pub.dev/packages/remote_control_webrtc)
+[![Platform](https://img.shields.io/badge/platform-android-blue.svg)](https://pub.dev/packages/remote_control_webrtc)
 
 ## ✨ Features
 
