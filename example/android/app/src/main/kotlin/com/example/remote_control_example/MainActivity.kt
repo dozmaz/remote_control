@@ -1,4 +1,4 @@
-package bo.webrtc.remote_control_example
+package com.example.remote_control_example
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,4 +1,4 @@
-package bo.webrtc.remote_control
+package bo.webrtc.remote_control_webrtc
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -13,10 +13,10 @@ import kotlin.test.Test
  * you can run them directly from IDEs that support JUnit such as Android Studio.
  */
 
-internal class RemoteControlPluginTest {
+internal class RemoteControlWebrtcPluginTest {
     @Test
     fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
-        val plugin = RemoteControlPlugin()
+        val plugin = RemoteControlWebrtcPlugin()
 
         val call = MethodCall("getPlatformVersion", null)
         val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)

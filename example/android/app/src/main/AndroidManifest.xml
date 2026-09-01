@@ -2,9 +2,12 @@
     <!-- Permisos añadidos por el ejemplo para usar WebSocket, servicios en primer plano y captura de pantalla -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- permiso para SDK 36 o superior -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Opcional: si se transmite audio -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:label="remote_control_example"
         android:name="${applicationName}"

@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
-    namespace = "bo.webrtc.remote_control_example"
-    compileSdk = flutter.compileSdkVersion
+    namespace = "com.example.remote_control_example"
+    compileSdk = 37 //flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -14,17 +14,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "bo.webrtc.remote_control_example"
+        applicationId = "com.example.remote_control_example"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 37 //flutter.targetSdkVersion
+        // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
+        // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)
+        // You can force using the value of versionCode by specifying the `-P force-version-code-ignoring-abi=true`
+        // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -36,11 +36,11 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
 
-    packaging {
-        jniLibs {
-            useLegacyPackaging = true // Equivalente a establecer enableUncompressedNativeLibs = false
-        }
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
