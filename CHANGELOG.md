@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgrade Flutter plugin project structure with MethodChannel and Android support
 - Upgrade Flutter and Android dependencies
+- Support for Gradle 9.*
 
 ## [1.0.3] - 2026-07-06
 
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Android
 - Add support for Android 15
+- Support for Gradle 8.*
 
 
 ## [1.0.1] - 2026-05-27
